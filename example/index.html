@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <title>DO测试页面</title>
+        <meta name="DO" content=""/>
+        <meta name="keywords" content=""/>
+        <base target="_blank"/>
+    </head>
+    <body>
+        <div id="doc" data-doc-config='{cc:22}'>
+            <div id="alibar">alibar</div>
+            <div id="header" class="w952">header</div>
+            <div id="content" class="w952">
+				<div id="mod-test" data-mod-config='{"a":"12333333333"}' style="height:600px;width:400px;border:1px solid red;">111</div>
+				<div id="mod-test23" data-mod-config='{"a":"132"}' style="height:200px;width:400px;border:1px solid red;"></div>
+				<div id="mod-test234" data-mod-config='{"a":"132"}' style="height:200px;width:400px;border:1px solid red;"></div>
+			</div>
+            <div id="footer">footer</div>
+        </div>
+		<script src="../src/jquery-1.7.1.js"></script>
+		<script src="../src/jengine.js"></script>
+        <script>
+		
+			/*var console = {};
+			
+			console.log =function(){
+			
+			};*/
+		
+			JEngine.layout('config',{
+				applation:'company-search',
+				root:'#doc',
+				configField:'doc-config'
+			});
+			
+			JEngine.layout('config',function(sandbox){
+				return {hh:55}
+			});
+			
+			
+			JEngine.module(function(sandbox){
+				console.log('no module id');
+				a.b = 2;
+			});
+			
+			JEngine.module('#mod-test',function(sandbox){
+				var handle = function(event,data){
+					console.log(event);
+					console.log(data);
+					console.log('event');
+					sandbox.off('test22');
+				}
+				sandbox.on(['test22'],handle);	
+				
+				console.log('moudle:#mod-test');
+				
+				return {
+					init:function(){
+						//alert(12);
+					},
+					children:[
+						{
+							init:function(box){
+								console.log(124,box);
+							}
+						},
+						function(){
+							console.log('child2');
+						}
+					]
+				}
+				
+			});
+			
+			//JEngine.start('#mod-test');
+			
+			JEngine.module('.test2',function(sandbox){
+				console.log('module-->test2');
+				sandbox.notify('test22',{
+					bb:4
+				});
+				sandbox.on(function(event){
+					console.log('ready');
+					//console.log(event);
+					console.log(11,sandbox.getModuleData('#mod-test')('node'));
+					console.log(12,sandbox.layout('config'));
+					console.log(sandbox.dump());
+				});
+			});
+			JEngine.module('@#mod-test23',{
+				init:function(sandbox){
+					console.log('modlue-->mod-test23');
+					sandbox.notify('test22',{
+						bb:66
+					});
+				},
+				children:[
+					{
+						init:function(){
+							console.log('modlue-->mod-test23-->child');
+						}
+					}]
+				},{
+				event:'exposure'
+			});
+			JEngine.module('@#mod-test234',{
+				init:function(){
+					console.log('modlue-->mod-test23');
+				},
+				children:[
+					{
+						init:function(){
+							console.log('modlue-->mod-test23-->child');
+						}
+					}]
+				},{
+				event:'exposure'
+			});
+			
+			JEngine.start('*');
+			
+		</script>
+	
+    </body>
+</html>
